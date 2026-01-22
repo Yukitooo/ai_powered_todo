@@ -4,7 +4,7 @@ let errorState = $state('')
 
 
 
-const errorStore =  {
+export const errorStore =  {
     get errorState(){
         return errorState;
     },
