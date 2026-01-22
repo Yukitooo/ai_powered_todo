@@ -2,9 +2,12 @@
 	import { taskStore } from '$lib/states/states.subtasks.svelte';
 
 	let inputTask = '';
+	let errorMessage = '';
 
 	async function handleBreakdown() {
-		const response = await fetch('/api/breakdown', {
+		errorMessage = '';
+		try{
+			const response = await fetch('/api/breakdown', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -28,6 +31,11 @@
 		}));
 
 		taskStore.setTask(newTasks);
+		}
+		catch{
+			errorMessage = "Oof. Please try again..."
+		}
+		
 	}
 </script>
 
@@ -43,6 +51,10 @@
         "
 		onclick={handleBreakdown}
 	>
-		Create Task
+	{#if errorMessage}
+		<p>{errorMessage}</p>
+	{:else}
+		<p>Create task</p>
+	{/if}
 	</button>
 </div>
