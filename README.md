@@ -90,3 +90,5 @@ No overthinking. Just start.
 ![Nonsense Input](static/readme_images/image-4.png)
 ![Nonsense Input Result](static/readme_images/image-5.png)
 
+## Error Handling
+- Picture is on the way! 
