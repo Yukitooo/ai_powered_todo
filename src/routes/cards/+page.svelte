@@ -1,8 +1,5 @@
 <script>
-
+	import TaskCard from '$lib/components/TaskCard.svelte';
 </script>
 
-
-
-
-<div>Cards</div>
+<TaskCard />
