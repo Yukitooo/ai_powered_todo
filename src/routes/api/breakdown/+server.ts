@@ -5,6 +5,10 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
     const { task } = await request.json();
+    if (!env.GROQ_API_KEY) {
+        console.error('Missing GROQ_API_KEY');
+        return json({ error: 'Missing GROQ_API_KEY' }, { status: 500 });
+    }
 
     const model = new ChatGroq({
         apiKey: env.GROQ_API_KEY,
@@ -28,9 +32,24 @@ Examples:
 
 Return ONLY the JSON array, nothing else:`;
 
-    const response = await model.invoke(prompt)
-    const subtasks = JSON.parse(response.content as string);
-
-    return json({ subtasks })
+    try {
+        const response = await model.invoke(prompt);
+        const content = String(response.content ?? '');
+        let subtasks: unknown;
+        try {
+            subtasks = JSON.parse(content);
+        } catch {
+            const match = content.match(/\[[\s\S]*\]/);
+            if (match) {
+                subtasks = JSON.parse(match[0]);
+            } else {
+                throw new Error('Model did not return JSON array');
+            }
+        }
+        return json({ subtasks });
+    } catch (err) {
+        console.error('breakdown failed', err);
+        return json({ error: 'Breakdown failed' }, { status: 500 });
+    }
 }
 
