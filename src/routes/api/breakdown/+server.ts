@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { GROQ_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { ChatGroq } from '@langchain/groq';
 import type { RequestHandler } from './$types';
 
@@ -7,7 +7,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const { task } = await request.json();
 
     const model = new ChatGroq({
-        apiKey: GROQ_API_KEY,
+        apiKey: env.GROQ_API_KEY,
         model: "llama-3.1-8b-instant"
     });
 
